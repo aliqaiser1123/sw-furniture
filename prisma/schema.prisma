@@ -1,0 +1,476 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  STAFF
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  emailVerified  Boolean   @default(false)
+  image          String?
+  passwordHash   String?
+  phone          String?
+  role           Role      @default(CUSTOMER)
+  status         String    @default("active")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  sessions       Session[]
+  accounts       Account[]
+  
+  addresses      Address[]
+  orders         Order[]
+  reviews        Review[]
+  wishlist       Wishlist?
+  cart           Cart?
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String    @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName    String
+  phone       String
+  country     String
+  province    String
+  city        String
+  address     String
+  postalCode  String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  orders      Order[]
+}
+
+model Category {
+  id               String     @id @default(uuid())
+  name             String
+  slug             String     @unique
+  description      String?
+  imageUrl         String?
+  parentCategoryId String?
+  parentCategory   Category?  @relation("CategoryToCategory", fields: [parentCategoryId], references: [id])
+  subCategories    Category[] @relation("CategoryToCategory")
+  seoTitle         String?
+  metaDescription  String?
+  createdAt        DateTime   @default(now())
+
+  products         Product[]
+}
+
+model Collection {
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  description     String?
+  bannerImage     String?
+  seoTitle        String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+
+  products        Product[]
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  sku              String   @unique
+  name             String
+  slug             String   @unique
+  shortDescription String?
+  description      String?
+  
+  price            Float
+  salePrice        Float?
+  costPrice        Float?
+  
+  stock            Int      @default(0)
+  lowStockLimit    Int      @default(5)
+  
+  categoryId       String?
+  category         Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  collectionId     String?
+  collection       Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  
+  material         String?
+  woodType         String?
+  finish           String?
+  color            String?
+  weight           Float?
+  
+  length           Float?
+  width            Float?
+  height           Float?
+  
+  deliveryDays     Int?
+  warranty         String?
+  
+  featured         Boolean  @default(false)
+  published        Boolean  @default(false)
+  status           ProductStatus @default(DRAFT)
+  
+  seoTitle         String?
+  metaDescription  String?
+  focusKeyword     String?
+  
+  featuredImage    String?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  images           ProductImage[]
+  videos           ProductVideo[]
+  tags             ProductTag[]
+  cartItems        CartItem[]
+  wishlistItems    WishlistItem[]
+  orderItems       OrderItem[]
+  reviews          Review[]
+}
+
+model ProductImage {
+  id           String  @id @default(uuid())
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl     String
+  altText      String?
+  displayOrder Int     @default(0)
+}
+
+model ProductVideo {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  videoUrl  String
+}
+
+model Tag {
+  id       String       @id @default(uuid())
+  name     String
+  slug     String       @unique
+  products ProductTag[]
+}
+
+model ProductTag {
+  productId String
+  tagId     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String?    @unique
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+}
+
+model Wishlist {
+  id        String         @id @default(uuid())
+  userId    String         @unique
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  items     WishlistItem[]
+}
+
+model WishlistItem {
+  id         String   @id @default(uuid())
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  orderNumber   String        @unique
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  subtotal      Float
+  discount      Float         @default(0)
+  shipping      Float         @default(0)
+  tax           Float         @default(0)
+  total         Float
+  
+  orderStatus   OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  
+  addressId     String?
+  address       Address?      @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  items         OrderItem[]
+  payments      Payment[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: SetNull)
+  quantity  Int
+  unitPrice Float
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paymentMethod String
+  transactionId String?
+  amount        Float
+  paymentStatus PaymentStatus @default(PENDING)
+  paidAt        DateTime?
+}
+
+model Coupon {
+  id           String     @id @default(uuid())
+  code         String     @unique
+  type         CouponType
+  value        Float
+  minimumOrder Float?
+  expiryDate   DateTime?
+  usageLimit   Int?
+  active       Boolean    @default(true)
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int
+  review    String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  excerpt         String?
+  content         String
+  featuredImage   String?
+  author          String?
+  seoTitle        String?
+  metaDescription String?
+  published       Boolean  @default(false)
+  publishedAt     DateTime?
+}
+
+model BlogCategory {
+  id   String @id @default(uuid())
+  name String
+  slug String @unique
+}
+
+model MediaLibrary {
+  id         String   @id @default(uuid())
+  fileName   String
+  fileUrl    String
+  fileType   String
+  uploadedBy String?
+  createdAt  DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Newsletter {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+}
+
+model Settings {
+  id                  String  @id @default(uuid())
+  storeName           String?
+  phone               String?
+  email               String?
+  address             String?
+  
+  defaultTitle        String?
+  defaultDescription  String?
+  
+  facebook            String?
+  instagram           String?
+  linkedin            String?
+  youtube             String?
+  
+  googleAnalyticsId   String?
+  gtmId               String?
+  metaPixelId         String?
+  clarityId           String?
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  title     String
+  subtitle  String?
+  linkUrl   String?
+  imageUrl  String
+  position  String   @default("homepage_hero")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FAQCategory {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  faqs      FAQ[]
+}
+
+model FAQ {
+  id            String       @id @default(uuid())
+  question      String
+  answer        String
+  categoryId    String?
+  category      FAQCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  displayOrder  Int          @default(0)
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+}
+
+model StaticPage {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  content         String
+  seoTitle        String?
+  metaDescription String?
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model HomepageSettings {
+  id              String   @id @default("singleton")
+  heroHeadline    String?
+  heroSubline     String?
+  announcementText String?
+  announcementLink String?
+  showAnnouncement Boolean @default(false)
+}
+
+
+model AISettings {
+  id              String   @id @default("singleton")
+  provider        String   @default("openai") // openai, gemini, anthropic
+  apiKey          String?
+  modelName       String   @default("gpt-4o")
+  temperature     Float    @default(0.7)
+  maxTokens       Int      @default(1000)
+  enableChat      Boolean  @default(true)
+  enableVisual    Boolean  @default(true)
+  enableRecommend Boolean  @default(true)
+}
+
+model SearchLog {
+  id        String   @id @default(cuid())
+  query     String
+  results   Int      @default(0)
+  userId    String?
+  createdAt DateTime @default(now())
+}
