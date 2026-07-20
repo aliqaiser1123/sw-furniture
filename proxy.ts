@@ -7,7 +7,7 @@ export default async function proxy(request: NextRequest) {
 
   // Protect /account and its subroutes
   if (pathname.startsWith("/account")) {
-    const { data: session } = await betterFetch<Session>(
+    const { data: session } = await betterFetch<any>(
       "/api/auth/get-session",
       {
         baseURL: process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin,
@@ -27,7 +27,7 @@ export default async function proxy(request: NextRequest) {
 
   // Prevent authenticated users from visiting login/register pages
   if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
-    const { data: session } = await betterFetch<Session>(
+    const { data: session } = await betterFetch<any>(
       "/api/auth/get-session",
       {
         baseURL: process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin,
@@ -46,7 +46,7 @@ export default async function proxy(request: NextRequest) {
 
   // Protect /admin routes (only ADMIN or STAFF allowed)
   if (pathname.startsWith("/admin")) {
-    const { data: session } = await betterFetch<Session>(
+    const { data: session } = await betterFetch<any>(
       "/api/auth/get-session",
       {
         baseURL: process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin,

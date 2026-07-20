@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/layout/Navbar";
+
 import { Footer } from "@/components/layout/Footer";
 import { defaultSEO } from "@/config/seo";
 import { siteConfig } from "@/config/site";
@@ -71,7 +71,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
+
           <main className="flex-1 flex flex-col w-full" id="main-content">
             {children}
           </main>

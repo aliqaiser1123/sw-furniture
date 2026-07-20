@@ -70,16 +70,14 @@ export async function getAIProvider() {
         messages,
         system: systemPrompt,
         temperature: settings.temperature ?? undefined,
-        maxTokens: settings.maxTokens ?? undefined,
       });
-      return result.toDataStreamResponse();
+      return result.toTextStreamResponse();
     },
     async generate(prompt: string) {
       const { text } = await generateText({
         model,
         prompt,
         temperature: settings.temperature ?? undefined,
-        maxTokens: settings.maxTokens ?? undefined,
       });
       return text;
     },

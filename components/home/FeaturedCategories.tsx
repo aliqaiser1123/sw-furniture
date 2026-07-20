@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 const CATEGORIES = [
@@ -54,26 +55,31 @@ export function FeaturedCategories() {
   // Start with CHAIR DESIGN active (index 2)
   const [activeIndex, setActiveIndex] = useState(2);
 
+  const prevSlide = () => setActiveIndex((i) => Math.max(0, i - 1));
+  const nextSlide = () => setActiveIndex((i) => Math.min(CATEGORIES.length - 1, i + 1));
+
   return (
     <section className="section-padding overflow-hidden relative">
       <div className="container-default max-w-6xl">
         
         {/* Top Navigation */}
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-12 mb-20">
-          {CATEGORIES.map((cat, idx) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveIndex(idx)}
-              className={cn(
-                "uppercase tracking-widest text-sm md:text-base font-bold transition-all duration-300",
-                activeIndex === idx 
-                  ? "text-white scale-110" 
-                  : "text-white/40 hover:text-white/70"
-              )}
-            >
-              {cat.category}
-            </button>
-          ))}
+        <div className="flex overflow-x-auto hide-scrollbar md:flex-wrap justify-start md:justify-center items-center gap-4 md:gap-12 mb-12 md:mb-20 px-4 md:px-0">
+          <div className="flex items-center gap-6 md:gap-12 w-max mx-auto px-4 md:px-0 py-2">
+            {CATEGORIES.map((cat, idx) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveIndex(idx)}
+                className={cn(
+                  "uppercase tracking-widest text-xs md:text-base font-bold transition-all duration-300 whitespace-nowrap",
+                  activeIndex === idx 
+                    ? "text-[#3E2410] md:text-white scale-110 bg-[#D9CABA] md:bg-transparent px-4 py-2 rounded-full md:p-0 md:rounded-none" 
+                    : "text-[#7C5C45] md:text-white/40 hover:text-[#3E2410] md:hover:text-white/70 px-4 py-2 md:p-0"
+                )}
+              >
+                {cat.category}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 3D Carousel Container */}
@@ -139,8 +145,7 @@ export function FeaturedCategories() {
                   onClick={() => setActiveIndex(idx)}
                   className={cn(
                     "absolute w-[280px] h-[380px] md:w-[450px] md:h-[550px] rounded-[2rem] flex flex-col items-center pt-8 md:pt-12 cursor-pointer",
-                    "shadow-neumorphic bg-card border border-white/5",
-                    diff !== 0 && "pointer-events-auto"
+                    "shadow-neumorphic bg-card border border-white/5"
                   )}
                 >
                   {/* Card Content (Visible fully only when active) */}
@@ -149,10 +154,10 @@ export function FeaturedCategories() {
                     className="text-center space-y-2 mb-8 z-10 relative"
                   >
                     <h3 className="text-xl md:text-2xl font-bold text-white tracking-wide">{cat.name}</h3>
-                    <div className="flex items-center justify-center gap-4 text-xs md:text-sm text-white/70">
-                      <span>{cat.price}</span>
+                    <div className="flex items-center justify-center gap-4 text-xs md:text-sm text-white/80">
+                      <span className="text-white font-semibold">{cat.price}</span>
                       {cat.tags.map(tag => (
-                        <span key={tag} className="hidden md:inline-block">{tag}</span>
+                        <span key={tag} className="hidden md:inline-block text-white/70">{tag}</span>
                       ))}
                     </div>
                   </motion.div>
@@ -172,6 +177,23 @@ export function FeaturedCategories() {
               );
             })}
           </AnimatePresence>
+
+          {/* Navigation Arrows — stopPropagation prevents double-step from card onClick */}
+          <button
+            onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+            disabled={activeIndex === 0}
+            className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-[#3E2410] border-2 border-[#3E2410] flex items-center justify-center text-white hover:bg-[#2D1B13] hover:border-[#2D1B13] transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          
+          <button
+            onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+            disabled={activeIndex === CATEGORIES.length - 1}
+            className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-[#3E2410] border-2 border-[#3E2410] flex items-center justify-center text-white hover:bg-[#2D1B13] hover:border-[#2D1B13] transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+          >
+            <ChevronRight size={24} />
+          </button>
         </div>
 
         {/* Pagination Dots */}

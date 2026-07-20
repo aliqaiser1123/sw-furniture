@@ -1,18 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { Model3DUpload } from "@/components/admin/Model3DUpload";
 import { SEOFields } from "@/components/admin/SEOFields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save, ArrowLeft, Box } from "lucide-react";
 import Link from "next/link";
 
 export default function CreateProductPage() {
+  const [modelUrl, setModelUrl] = useState<string | undefined>();
+  const [modelFileName, setModelFileName] = useState<string | undefined>();
+
   return (
     <div className="space-y-6 pb-20">
       <div className="flex items-center justify-between">
@@ -71,6 +76,35 @@ export default function CreateProductPage() {
             </CardHeader>
             <CardContent>
               <ImageUpload maxImages={8} />
+            </CardContent>
+          </Card>
+
+          <Card className="border-[#D9CABA]">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-[#2C1A0E]">
+                <Box className="w-5 h-5 text-[#3E2410]" />
+                3D Model
+                <span className="text-xs font-normal text-[#7C5C45] bg-[#F5EFE7] px-2 py-0.5 rounded-full ml-2">Optional</span>
+              </CardTitle>
+              <p className="text-sm text-[#7C5C45]">
+                Upload a .glb or .gltf file. Customers will be able to rotate and view the product in 3D — and even place it in their room using AR.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Model3DUpload
+                currentModelUrl={modelUrl}
+                onUpload={(url, fileName, fileSize) => {
+                  setModelUrl(url);
+                  setModelFileName(fileName);
+                }}
+                onRemove={() => {
+                  setModelUrl(undefined);
+                  setModelFileName(undefined);
+                }}
+              />
+              {modelUrl && (
+                <input type="hidden" name="modelUrl" value={modelUrl} />
+              )}
             </CardContent>
           </Card>
 

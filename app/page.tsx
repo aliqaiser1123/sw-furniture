@@ -51,7 +51,7 @@ export default async function HomePage() {
   const featuredProducts = await db.product.findMany({
     where: { featured: true, status: "PUBLISHED" },
     take: 8,
-    include: { category: true }
+    include: { category: true, images: { orderBy: { displayOrder: "asc" } } }
   });
 
   return (
@@ -60,7 +60,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
-      <HeroSection products={featuredProducts.slice(0, 3)} />
+      <HeroSection products={featuredProducts.slice(0, 6)} />
       <FeaturedCategories />
       <FeaturedProducts products={featuredProducts} />
       <WhyChooseUs />

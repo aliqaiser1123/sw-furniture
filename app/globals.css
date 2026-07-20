@@ -10,7 +10,6 @@
   --font-sans: var(--font-inter);
   --font-heading: var(--font-geist-sans);
 
-  /* All required Tailwind color tokens */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--card);
@@ -28,71 +27,68 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-xl: calc(var(--radius) * 1.5);
 }
 
 :root {
-  /* Deep Taupe/Brown Background */
-  --background: oklch(0.35 0.01 75);
-  /* White/Off-white Text */
-  --foreground: oklch(0.98 0 0);
+  /* ─── WHITE BACKGROUND ─────────────────────────────── */
+  --background: #ffffff;
+  --foreground: #2C1A0E;
 
-  /* Slightly lighter taupe for 3D Cards */
-  --card: oklch(0.40 0.01 75);
-  --card-foreground: oklch(0.95 0 0);
+  /* ─── CARDS & CONTAINERS: Pure Sheesham Wood ───────── */
+  --card: #4A2E1B;
+  --card-foreground: #F5EFE7;
 
-  /* Brand Primary */
-  --primary: oklch(0.25 0.01 75);
-  --primary-foreground: oklch(0.98 0 0);
+  /* ─── PRIMARY: Deep Sheesham ──────────────────────── */
+  --primary: #3E2410;
+  --primary-foreground: #FAF6F1;
 
-  /* Secondary Button */
-  --secondary: oklch(0.45 0.01 75);
-  --secondary-foreground: oklch(0.98 0 0);
+  /* ─── SECONDARY: Warm Cream ───────────────────────── */
+  --secondary: #F5EFE7;
+  --secondary-foreground: #3E2410;
 
-  /* Muted: Grayish Taupe */
-  --muted: oklch(0.45 0.01 75);
-  --muted-foreground: oklch(0.75 0.01 75);
+  /* ─── MUTED ────────────────────────────────────────── */
+  --muted: #F0E9DF;
+  --muted-foreground: #7C5C45;
 
-  /* Accent: Golden/Orange */
-  --accent: oklch(0.70 0.16 60);
-  --accent-foreground: oklch(0.15 0 0);
+  /* ─── ACCENT: Golden Teak Amber ───────────────────── */
+  --accent: #C08040;
+  --accent-foreground: #FAF6F1;
 
-  /* Borders */
-  --border: oklch(0.30 0.01 75);
-  --input: oklch(0.30 0.01 75);
-  --ring: oklch(0.70 0.16 60);
+  /* ─── BORDERS / INPUTS ─────────────────────────────── */
+  --border: #D9CABA;
+  --input: #EDE5D8;
+  --ring: #C08040;
 
   --destructive: oklch(0.577 0.245 27.325);
-
-  --radius: 1.5rem;
+  --radius: 0.75rem;
 }
 
 .dark {
-  /* Dark mode maintains luxury feel with deep rich tones */
-  --background: oklch(0.15 0.01 250);
-  --foreground: oklch(0.95 0.005 75);
+  --background: #1C0F08;
+  --foreground: #F5EFE7;
 
-  --card: oklch(0.18 0.01 250);
-  --card-foreground: oklch(0.85 0.005 75);
+  --card: #2A1A0E;
+  --card-foreground: #F0E6D3;
 
-  --primary: oklch(0.85 0.04 50);
-  --primary-foreground: oklch(0.15 0.01 250);
+  --primary: #C08040;
+  --primary-foreground: #1C0F08;
 
-  --secondary: oklch(0.22 0.01 250);
-  --secondary-foreground: oklch(0.85 0.005 75);
+  --secondary: #3E2410;
+  --secondary-foreground: #F0E6D3;
 
-  --muted: oklch(0.22 0.01 250);
-  --muted-foreground: oklch(0.65 0.01 250);
+  --muted: #2A1A0E;
+  --muted-foreground: #9E7E60;
 
-  --accent: oklch(0.72 0.08 70);
-  --accent-foreground: oklch(0.15 0.01 250);
+  --accent: #D4954A;
+  --accent-foreground: #1C0F08;
 
-  --border: oklch(0.25 0.01 250);
-  --input: oklch(0.25 0.01 250);
-  --ring: oklch(0.72 0.08 70);
+  --border: #3E2410;
+  --input: #2A1A0E;
+  --ring: #D4954A;
 
   --destructive: oklch(0.704 0.191 22.216);
 }
@@ -111,38 +107,39 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-geist-sans), sans-serif;
     letter-spacing: -0.02em;
-    @apply font-medium text-foreground;
+    @apply font-semibold text-foreground;
   }
 }
 
 @layer utilities {
-  /* Larger elegant spacing for luxury feel */
   .section-padding {
-    @apply py-24 md:py-32 lg:py-40;
+    @apply py-20 md:py-28 lg:py-36;
   }
   .container-default {
     @apply mx-auto max-w-7xl px-6 sm:px-8 lg:px-12;
   }
-  /* Minimal hover lift for cards */
   .card-hover {
-    @apply transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5;
+    @apply transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10;
   }
-  /* Primary Button style */
   .btn-primary {
-    @apply bg-primary text-primary-foreground rounded-full px-8 py-3.5 font-medium transition-colors hover:bg-accent hover:text-white inline-flex items-center justify-center;
+    @apply bg-[#3E2410] text-[#FAF6F1] rounded-full px-8 py-3.5 font-semibold transition-all hover:bg-[#C08040] hover:text-white inline-flex items-center justify-center gap-2;
     font-family: var(--font-geist-sans), sans-serif;
   }
-  /* Secondary Button style */
   .btn-secondary {
-    @apply bg-white border border-primary text-primary rounded-full px-8 py-3.5 font-medium transition-colors hover:border-accent hover:text-accent inline-flex items-center justify-center;
+    @apply border border-[#3E2410] text-[#3E2410] bg-transparent rounded-full px-8 py-3.5 font-semibold transition-all hover:bg-[#3E2410] hover:text-white inline-flex items-center justify-center gap-2;
     font-family: var(--font-geist-sans), sans-serif;
   }
-}@layer utilities {
-  .shadow-neumorphic {
-    box-shadow: 
-      20px 20px 60px rgba(0, 0, 0, 0.4),
-      -20px -20px 60px rgba(255, 255, 255, 0.05),
-      inset 2px 2px 4px rgba(255, 255, 255, 0.1),
-      inset -2px -2px 4px rgba(0, 0, 0, 0.2);
+  .wood-card {
+    @apply bg-[#4A2E1B] text-[#F5EFE7] rounded-2xl;
+  }
+  .shadow-wood {
+    box-shadow: 0 8px 32px rgba(62,36,16,0.20), 0 2px 8px rgba(62,36,16,0.08);
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 }

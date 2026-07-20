@@ -194,6 +194,7 @@ model Product {
   
   images           ProductImage[]
   videos           ProductVideo[]
+  models           ProductModel[]
   tags             ProductTag[]
   cartItems        CartItem[]
   wishlistItems    WishlistItem[]
@@ -215,6 +216,16 @@ model ProductVideo {
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   videoUrl  String
+}
+
+model ProductModel {
+  id          String   @id @default(uuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  modelUrl    String
+  fileName    String
+  fileSize    Int?
+  createdAt   DateTime @default(now())
 }
 
 model Tag {
