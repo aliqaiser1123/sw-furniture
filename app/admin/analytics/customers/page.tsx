@@ -40,21 +40,25 @@ export default async function CustomerAnalyticsPage() {
   }));
 
   // Fetch user details for top customers
-  const topUserIds = topCustomerOrders.map((o) => o.userId).filter(Boolean) as string[];
+  const topUserIds = topCustomerOrders
+    .map(({ userId }) => userId)
+    .filter((id): id is string => Boolean(id));
+
   const topUsers = topUserIds.length
     ? await db.user.findMany({
-        where: { id: { in: topUserIds } },
-        select: { id: true, name: true, email: true },
-      })
+      where: { id: { in: topUserIds } },
+      select: { id: true, name: true, email: true },
+    })
     : [];
 
-  const topCustomers = topCustomerOrders.map((o) => {
-    const user = topUsers.find((u) => u.id === o.userId);
+  const topCustomers = topCustomerOrders.map(({ userId, _count, _sum }) => {
+    const user = topUsers.find((u) => u.id === userId);
+
     return {
       name: user?.name ?? "Unknown",
       email: user?.email ?? "",
-      orders: o._count.id,
-      spent: Number(o._sum.total ?? 0),
+      orders: _count.id,
+      spent: Number(_sum.total ?? 0),
     };
   });
 
