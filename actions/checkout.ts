@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
-import { Prisma } from "@prisma/client";
 
 interface CheckoutData {
   address: {
@@ -51,7 +50,7 @@ export async function createOrder(data: CheckoutData) {
     const orderNumber = `ORD-${dateStr}-${randomStr}`;
 
     // Execute within a transaction to ensure atomic operations (stock deduction + order creation)
-    const result = await db.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await db.$transaction(async (tx: any) => {
 
       // 1. Verify stock for all items
       for (const item of data.items) {
