@@ -252,11 +252,10 @@ export default async function AnalyticsPage() {
                 <div key={p.id} className="flex items-center justify-between py-2 border-b last:border-0">
                   <p className="text-sm text-foreground truncate max-w-[200px]">{p.name}</p>
                   <span
-                    className={`text-xs font-mono font-medium px-2 py-0.5 rounded-full ${
-                      p.stock === 0
+                    className={`text-xs font-mono font-medium px-2 py-0.5 rounded-full ${p.stock === 0
                         ? "bg-red-100 text-red-700"
                         : "bg-orange-100 text-orange-700"
-                    }`}
+                      }`}
                   >
                     {p.stock === 0 ? "OUT" : `${p.stock} left`}
                   </span>
@@ -306,15 +305,14 @@ export default async function AnalyticsPage() {
                   <td className="py-3">{order.user?.name || "Guest"}</td>
                   <td className="py-3">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        order.orderStatus === "DELIVERED"
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.orderStatus === "DELIVERED"
                           ? "bg-green-100 text-green-700"
                           : order.orderStatus === "CANCELLED"
-                          ? "bg-red-100 text-red-700"
-                          : order.orderStatus === "SHIPPED"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-orange-100 text-orange-700"
-                      }`}
+                            ? "bg-red-100 text-red-700"
+                            : order.orderStatus === "SHIPPED"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-orange-100 text-orange-700"
+                        }`}
                     >
                       {order.orderStatus}
                     </span>

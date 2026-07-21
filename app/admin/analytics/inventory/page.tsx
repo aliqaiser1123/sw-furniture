@@ -27,17 +27,17 @@ export default async function InventoryAnalyticsPage() {
   ]);
 
   const totalInventoryValue = allProducts.reduce(
-    (sum, p) => sum + p.stock * Number(p.price),
+    (sum: any, p: any) => sum + p.stock * Number(p.price),
     0
   );
 
   // Stock distribution chart
   const stockBuckets = [
     { label: "0", value: outOfStockProducts },
-    { label: "1-5", value: allProducts.filter((p) => p.stock >= 1 && p.stock <= 5).length },
-    { label: "6-20", value: allProducts.filter((p) => p.stock >= 6 && p.stock <= 20).length },
-    { label: "21-50", value: allProducts.filter((p) => p.stock >= 21 && p.stock <= 50).length },
-    { label: "50+", value: allProducts.filter((p) => p.stock > 50).length },
+    { label: "1-5", value: allProducts.filter((p: any) => p.stock >= 1 && p.stock <= 5).length },
+    { label: "6-20", value: allProducts.filter((p: any) => p.stock >= 6 && p.stock <= 20).length },
+    { label: "21-50", value: allProducts.filter((p: any) => p.stock >= 21 && p.stock <= 50).length },
+    { label: "50+", value: allProducts.filter((p: any) => p.stock > 50).length },
   ];
 
   return (
@@ -114,7 +114,7 @@ export default async function InventoryAnalyticsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {allProducts.map((p) => (
+              {allProducts.map((p: any) => (
                 <tr key={p.id} className="hover:bg-muted/30 transition-colors">
                   <td className="py-3 font-medium truncate max-w-[200px]">{p.name}</td>
                   <td className="py-3 text-muted-foreground font-mono text-xs">{p.sku || "—"}</td>
