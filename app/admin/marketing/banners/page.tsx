@@ -11,19 +11,19 @@ export default async function AdminBannersModule() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Banner Management" 
-        description="Manage promotional, seasonal, and homepage banners." 
+      <PageHeader
+        title="Banner Management"
+        description="Manage promotional, seasonal, and homepage banners."
         action={{ label: "Add Banner" }}
       />
-      
+
       <div className="bg-card border rounded-xl overflow-hidden">
         <div className="p-4 border-b flex items-center justify-between gap-4 bg-secondary/20">
           <div className="relative max-w-sm flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Search banners..." 
+            <input
+              type="text"
+              placeholder="Search banners..."
               className="w-full pl-9 pr-4 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
@@ -48,7 +48,7 @@ export default async function AdminBannersModule() {
                   </td>
                 </tr>
               ) : (
-                banners.map((banner) => (
+                banners.map((banner: any) => (
                   <tr key={banner.id} className="hover:bg-secondary/20 transition-colors">
                     <td className="px-6 py-4">
                       <div className="w-24 h-12 bg-secondary/30 rounded flex items-center justify-center overflow-hidden relative">

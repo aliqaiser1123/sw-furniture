@@ -11,7 +11,7 @@ type ExportFormat = "csv" | "excel" | "pdf";
 function generateCSV(data: Record<string, string | number>[], filename: string) {
   if (data.length === 0) return;
   const headers = Object.keys(data[0]);
-  const rows = data.map((row) => headers.map((h) => `"${row[h]}"`).join(","));
+  const rows = data.map((row: any) => headers.map((h: any) => `"${row[h]}"`).join(","));
   const csv = [headers.join(","), ...rows].join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
@@ -64,15 +64,14 @@ export default function ReportsPage() {
               <Calendar className="w-4 h-4" /> Date Range
             </h3>
             <div className="flex flex-wrap gap-2">
-              {(["today", "week", "month", "year", "custom"] as DateRange[]).map((range) => (
+              {(["today", "week", "month", "year", "custom"] as DateRange[]).map((range: any) => (
                 <button
                   key={range}
                   onClick={() => setDateRange(range)}
-                  className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors capitalize ${
-                    dateRange === range
+                  className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors capitalize ${dateRange === range
                       ? "bg-primary text-primary-foreground border-primary"
                       : "hover:bg-secondary"
-                  }`}
+                    }`}
                 >
                   {range === "week" ? "This Week" : range === "month" ? "This Month" : range === "year" ? "This Year" : range.charAt(0).toUpperCase() + range.slice(1)}
                 </button>
@@ -115,7 +114,7 @@ export default function ReportsPage() {
                 "Coupon Usage",
                 "Category Performance",
                 "Payment Methods",
-              ].map((item) => (
+              ].map((item: any) => (
                 <label key={item} className="flex items-center gap-2 cursor-pointer group">
                   <input
                     type="checkbox"
@@ -138,15 +137,14 @@ export default function ReportsPage() {
                 { key: "csv", label: "CSV", icon: <FileText className="w-4 h-4" /> },
                 { key: "excel", label: "Excel", icon: <FileSpreadsheet className="w-4 h-4" /> },
                 { key: "pdf", label: "PDF", icon: <File className="w-4 h-4" /> },
-              ] as const).map((fmt) => (
+              ] as const).map((fmt: any) => (
                 <button
                   key={fmt.key}
                   onClick={() => setExportFormat(fmt.key)}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-colors ${
-                    exportFormat === fmt.key
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-colors ${exportFormat === fmt.key
                       ? "bg-primary text-primary-foreground border-primary"
                       : "hover:bg-secondary"
-                  }`}
+                    }`}
                 >
                   {fmt.icon}
                   {fmt.label}
@@ -181,7 +179,7 @@ export default function ReportsPage() {
                 { name: "Annual Performance Report", range: "year" },
                 { name: "Inventory Audit", range: "month" },
                 { name: "Customer Growth Report", range: "month" },
-              ].map((r) => (
+              ].map((r: any) => (
                 <button
                   key={r.name}
                   onClick={() => {

@@ -14,13 +14,13 @@ async function updateAnalyticsSettings(formData: FormData) {
   const gtmId = formData.get("gtmId") as string;
   const metaPixelId = formData.get("metaPixelId") as string;
   const clarityId = formData.get("clarityId") as string;
-  
+
   await db.settings.upsert({
     where: { id: "singleton" },
     update: { googleAnalyticsId, gtmId, metaPixelId, clarityId },
     create: { id: "singleton", googleAnalyticsId, gtmId, metaPixelId, clarityId },
   });
-  
+
   revalidatePath("/admin/settings/analytics");
   revalidatePath("/", "layout");
 }
