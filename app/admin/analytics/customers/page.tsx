@@ -41,8 +41,8 @@ export default async function CustomerAnalyticsPage() {
 
   // Fetch user details for top customers
   const topUserIds = topCustomerOrders
-    .map((order: any) => order.userId)
-    .filter((id): id is string => Boolean(id));
+    .map((order: { userId: string }) => order.userId)
+    .filter((id: string | undefined | null): id is string => Boolean(id));
 
   const topUsers = topUserIds.length
     ? await db.user.findMany({
