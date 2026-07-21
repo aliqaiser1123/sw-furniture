@@ -44,8 +44,8 @@ export default async function CustomerAnalyticsPage() {
 
   // Collect non-null user IDs from the group-by result
   const topUserIds: string[] = topCustomerOrders
-    .map((order) => order.userId)
-    .filter((id): id is string => id !== null && id !== undefined);
+    .map((order: any) => order.userId)
+    .filter((id: any): id is string => id !== null && id !== undefined);
 
   const topUsers = topUserIds.length
     ? await db.user.findMany({
