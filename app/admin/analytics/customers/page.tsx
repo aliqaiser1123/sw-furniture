@@ -34,15 +34,15 @@ export default async function CustomerAnalyticsPage() {
   ]);
 
   const months = getLast6Months();
-  const growthData = months.map((label) => ({
+  const growthData = months.map((label: string) => ({
     label,
     value: Math.floor((totalCustomers / 6) * (0.4 + Math.random() * 1.2)),
   }));
 
   // Fetch user details for top customers
   const topUserIds = topCustomerOrders
-    .map((order: { userId: string }) => order.userId)
-    .filter((id: string | undefined | null): id is string => Boolean(id));
+    .map((order: any) => order.userId as string | null)
+    .filter((id): id is string => Boolean(id));
 
   const topUsers = topUserIds.length
     ? await db.user.findMany({
@@ -51,8 +51,9 @@ export default async function CustomerAnalyticsPage() {
     })
     : [];
 
-  const topCustomers = topCustomerOrders.map(({ userId, _count, _sum }) => {
-    const user = topUsers.find((u) => u.id === userId);
+  const topCustomers = topCustomerOrders.map((order: any) => {
+    const { userId, _count, _sum } = order;
+    const user = topUsers.find((u: any) => u.id === userId);
 
     return {
       name: user?.name ?? "Unknown",
@@ -89,7 +90,7 @@ export default async function CustomerAnalyticsPage() {
         <div className="bg-card border rounded-xl p-6">
           <h3 className="font-semibold mb-4">Top Customers by Spend</h3>
           <div className="space-y-3">
-            {topCustomers.map((c, i) => (
+            {topCustomers.map((c: any, i: number) => (
               <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
                 <div>
                   <p className="text-sm font-medium">{c.name || "Anonymous"}</p>
@@ -117,7 +118,7 @@ export default async function CustomerAnalyticsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {recentCustomers.map((c) => (
+              {recentCustomers.map((c: any) => (
                 <tr key={c.id} className="hover:bg-muted/30 transition-colors">
                   <td className="py-3 font-medium">{c.name || "—"}</td>
                   <td className="py-3 text-muted-foreground">{c.email}</td>
