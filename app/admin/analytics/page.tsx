@@ -83,17 +83,17 @@ export default async function AnalyticsPage() {
   const days = getLast7Days();
   const months = getLast6Months();
 
-  const revenueData = months.map((label, i) => ({
+  const revenueData = months.map((label: string) => ({
     label,
     value: Math.max(0, totalRevenue * (0.05 + Math.random() * 0.15)),
   }));
 
-  const ordersData = days.map((label, i) => ({
+  const ordersData = days.map((label: string) => ({
     label,
     value: Math.floor(Math.max(1, (totalOrders / 7) * (0.5 + Math.random()))),
   }));
 
-  const categoryData = categories.map((c, i) => ({
+  const categoryData = categories.map((c: { name: string }) => ({
     label: c.name,
     value: Math.floor(10 + Math.random() * 40),
   }));
@@ -124,7 +124,7 @@ export default async function AnalyticsPage() {
               { href: "/admin/analytics/inventory", label: "Inventory" },
               { href: "/admin/reports", label: "Reports" },
             ] as const
-          ).map((link) => (
+          ).map((link: { href: string; label: string }) => (
             <Link
               key={link.href}
               href={link.href}

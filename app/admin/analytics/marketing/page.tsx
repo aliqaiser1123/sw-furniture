@@ -17,7 +17,7 @@ export default async function MarketingAnalyticsPage() {
       db.collection.findMany({ select: { name: true }, take: 5 }),
     ]);
 
-  const categoryData = categories.map((c) => ({
+  const categoryData = categories.map((c: { name: string }) => ({
     label: c.name,
     value: Math.floor(10 + Math.random() * 60),
   }));
@@ -46,7 +46,7 @@ export default async function MarketingAnalyticsPage() {
         <div className="bg-card border rounded-xl p-6">
           <h3 className="font-semibold mb-4">Popular Collections</h3>
           <div className="space-y-3">
-            {collections.map((c, i) => (
+            {collections.map((c: { name: string }, i: number) => (
               <div key={i} className="flex items-center gap-3">
                 <span className="text-muted-foreground font-mono text-xs w-4">{i + 1}</span>
                 <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">

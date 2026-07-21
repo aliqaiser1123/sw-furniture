@@ -29,11 +29,11 @@ export default async function SalesAnalyticsPage() {
   const cancelledOrders = allOrders.filter((o) => o.orderStatus === "CANCELLED").length;
 
   const months = getLast12Months();
-  const revenueData = months.map((label) => ({
+  const revenueData = months.map((label: string) => ({
     label,
     value: Math.max(0, (totalRevenue / 12) * (0.4 + Math.random() * 1.2)),
   }));
-  const ordersData = months.map((label) => ({
+  const ordersData = months.map((label: string) => ({
     label,
     value: Math.max(0, Math.floor((totalOrders / 12) * (0.4 + Math.random() * 1.2))),
     secondaryValue: Math.max(0, Math.floor((cancelledOrders / 12) * (0.4 + Math.random() * 1.5))),

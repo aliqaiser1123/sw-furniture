@@ -3,10 +3,11 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/analytics/StatCard";
 import { RevenueChart } from "@/components/analytics/RevenueChart";
 import { Users, UserCheck, TrendingUp, Heart } from "lucide-react";
+import type { ChartDataPoint } from "@/types/prisma";
 
 export const metadata = { title: "Customer Analytics | Admin" };
 
-function getLast6Months() {
+function getLast6Months(): string[] {
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date();
     d.setMonth(d.getMonth() - (5 - i));
@@ -15,7 +16,7 @@ function getLast6Months() {
 }
 
 export default async function CustomerAnalyticsPage() {
-  const [totalCustomers, totalAdmins, recentCustomers, topCustomerOrders] = await Promise.all([
+  const [totalCustomers, totalAdmins, recentCustomers] = await Promise.all([
     db.user.count({ where: { role: "CUSTOMER" } }),
     db.user.count({ where: { role: "ADMIN" } }),
     db.user.findMany({
@@ -24,42 +25,43 @@ export default async function CustomerAnalyticsPage() {
       take: 10,
       select: { id: true, name: true, email: true, createdAt: true },
     }),
-    db.order.groupBy({
-      by: ["userId"],
-      _count: { id: true },
-      _sum: { total: true },
-      orderBy: { _count: { id: "desc" } },
-      take: 5,
-    }),
   ]);
 
+  // groupBy returns userId as string | null per Prisma schema (Order.userId is nullable)
+  const topCustomerOrders = await db.order.groupBy({
+    by: ["userId"],
+    _count: { id: true },
+    _sum: { total: true },
+    orderBy: { _count: { id: "desc" } },
+    take: 5,
+  });
+
   const months = getLast6Months();
-  const growthData = months.map((label: string) => ({
+  const growthData: ChartDataPoint[] = months.map((label: string) => ({
     label,
     value: Math.floor((totalCustomers / 6) * (0.4 + Math.random() * 1.2)),
   }));
 
-  // Fetch user details for top customers
-  const topUserIds = topCustomerOrders
-    .map((order: any) => order.userId as string | null)
-    .filter((id): id is string => Boolean(id));
+  // Collect non-null user IDs from the group-by result
+  const topUserIds: string[] = topCustomerOrders
+    .map((o) => o.userId)
+    .filter((id): id is string => id !== null && id !== undefined);
 
   const topUsers = topUserIds.length
     ? await db.user.findMany({
-      where: { id: { in: topUserIds } },
-      select: { id: true, name: true, email: true },
-    })
+        where: { id: { in: topUserIds } },
+        select: { id: true, name: true, email: true },
+      })
     : [];
 
-  const topCustomers = topCustomerOrders.map((order: any) => {
-    const { userId, _count, _sum } = order;
-    const user = topUsers.find((u: any) => u.id === userId);
-
+  // Build top customers list — Prisma infers the type of each item
+  const topCustomers = topCustomerOrders.map((o) => {
+    const user = topUsers.find((u) => u.id === o.userId) ?? null;
     return {
       name: user?.name ?? "Unknown",
       email: user?.email ?? "",
-      orders: _count.id,
-      spent: Number(_sum.total ?? 0),
+      orders: o._count.id,
+      spent: Number(o._sum.total ?? 0),
     };
   });
 
@@ -68,7 +70,10 @@ export default async function CustomerAnalyticsPage() {
       <PageHeader
         title="Customer Analytics"
         description="Customer growth, retention, and lifetime value."
-        breadcrumbs={[{ label: "Analytics", href: "/admin/analytics" }, { label: "Customers", href: "/admin/analytics/customers" }]}
+        breadcrumbs={[
+          { label: "Analytics", href: "/admin/analytics" },
+          { label: "Customers", href: "/admin/analytics/customers" },
+        ]}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -90,7 +95,7 @@ export default async function CustomerAnalyticsPage() {
         <div className="bg-card border rounded-xl p-6">
           <h3 className="font-semibold mb-4">Top Customers by Spend</h3>
           <div className="space-y-3">
-            {topCustomers.map((c: any, i: number) => (
+            {topCustomers.map((c, i) => (
               <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
                 <div>
                   <p className="text-sm font-medium">{c.name || "Anonymous"}</p>
@@ -118,7 +123,7 @@ export default async function CustomerAnalyticsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {recentCustomers.map((c: any) => (
+              {recentCustomers.map((c) => (
                 <tr key={c.id} className="hover:bg-muted/30 transition-colors">
                   <td className="py-3 font-medium">{c.name || "—"}</td>
                   <td className="py-3 text-muted-foreground">{c.email}</td>
