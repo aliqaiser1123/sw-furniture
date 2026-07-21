@@ -41,7 +41,7 @@ export default async function CustomerAnalyticsPage() {
 
   // Fetch user details for top customers
   const topUserIds = topCustomerOrders
-    .map(({ userId }) => userId)
+    .map((order) => order.userId)
     .filter((id): id is string => Boolean(id));
 
   const topUsers = topUserIds.length
