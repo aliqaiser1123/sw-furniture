@@ -13,12 +13,12 @@ export default async function AdminPagesModule() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Pages" 
-        description="Manage static pages, landing pages, and policies." 
+      <PageHeader
+        title="Pages"
+        description="Manage static pages, landing pages, and policies."
         action={{ label: "Create Page" }}
       />
-      
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Quick Stats */}
         <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -47,9 +47,9 @@ export default async function AdminPagesModule() {
           <div className="p-4 border-b flex items-center justify-between gap-4 bg-secondary/20">
             <div className="relative max-w-sm flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input 
-                type="text" 
-                placeholder="Search pages..." 
+              <input
+                type="text"
+                placeholder="Search pages..."
                 className="w-full pl-9 pr-4 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
@@ -74,7 +74,7 @@ export default async function AdminPagesModule() {
                     </td>
                   </tr>
                 ) : (
-                  pages.map((page) => (
+                  pages.map((page: any) => (
                     <tr key={page.id} className="hover:bg-secondary/20 transition-colors">
                       <td className="px-6 py-4 font-medium">{page.title}</td>
                       <td className="px-6 py-4 text-muted-foreground">/{page.slug}</td>

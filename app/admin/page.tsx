@@ -15,8 +15,8 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <PageHeader 
-        title="Dashboard" 
+      <PageHeader
+        title="Dashboard"
         description="Welcome to your Enterprise Admin CMS. Here's an overview of your store."
       />
 
@@ -31,7 +31,7 @@ export default async function AdminDashboard() {
             <p className="text-xs text-muted-foreground">+0% from last month</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Orders</CardTitle>
@@ -77,7 +77,7 @@ export default async function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Recent Orders</CardTitle>
@@ -85,7 +85,7 @@ export default async function AdminDashboard() {
           <CardContent>
             {recentOrders.length > 0 ? (
               <div className="space-y-4">
-                {recentOrders.map((order) => (
+                {recentOrders.map((order: any) => (
                   <div key={order.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
                     <div className="space-y-1">
                       <p className="text-sm font-medium leading-none">{order.orderNumber}</p>
