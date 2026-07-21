@@ -12,22 +12,22 @@ export default async function AdminFAQsModule() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="FAQ Management" 
-        description="Manage Frequently Asked Questions across the store." 
+      <PageHeader
+        title="FAQ Management"
+        description="Manage Frequently Asked Questions across the store."
         action={{ label: "Add FAQ" }}
       />
       <div className="flex justify-end gap-2 mb-6 -mt-4">
         <Button variant="outline">Categories</Button>
       </div>
-      
+
       <div className="bg-card border rounded-xl overflow-hidden">
         <div className="p-4 border-b flex items-center justify-between gap-4 bg-secondary/20">
           <div className="relative max-w-sm flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Search questions..." 
+            <input
+              type="text"
+              placeholder="Search questions..."
               className="w-full pl-9 pr-4 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
@@ -52,7 +52,7 @@ export default async function AdminFAQsModule() {
                   </td>
                 </tr>
               ) : (
-                faqs.map((faq) => (
+                faqs.map((faq: any) => (
                   <tr key={faq.id} className="hover:bg-secondary/20 transition-colors group">
                     <td className="px-4 py-4 text-center">
                       <MoveVertical className="w-4 h-4 text-muted-foreground/50 cursor-grab mx-auto hover:text-foreground" />
