@@ -55,8 +55,8 @@ export default async function CustomerAnalyticsPage() {
     : [];
 
   // Build top customers list — Prisma infers the type of each item
-  const topCustomers = topCustomerOrders.map((o) => {
-    const user = topUsers.find((u) => u.id === o.userId) ?? null;
+  const topCustomers = topCustomerOrders.map((o: any) => {
+    const user = topUsers.find((u: any) => u.id === o.userId) ?? null;
     return {
       name: user?.name ?? "Unknown",
       email: user?.email ?? "",
