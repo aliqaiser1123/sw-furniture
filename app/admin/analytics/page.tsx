@@ -98,7 +98,7 @@ export default async function AnalyticsPage() {
     value: Math.floor(10 + Math.random() * 40),
   }));
 
-  const topProductRows = topProducts.map((p, i) => ({
+  const topProductRows = topProducts.map((p: any, i: any) => ({
     rank: i + 1,
     name: p.name,
     image: p.featuredImage,
