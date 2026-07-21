@@ -76,7 +76,7 @@ export default async function AnalyticsPage() {
 
   // Calculate total revenue from orders
   const allOrders = await db.order.findMany({ select: { total: true } });
-  const totalRevenue = allOrders.reduce((sum, o) => sum + Number(o.total), 0);
+  const totalRevenue = allOrders.reduce((sum: any, o: any) => sum + Number(o.total), 0);
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
   // Mock chart data (in production, aggregate from DB with date grouping)
@@ -248,13 +248,13 @@ export default async function AnalyticsPage() {
             </p>
           ) : (
             <div className="space-y-3">
-              {lowStockProducts.map((p) => (
+              {lowStockProducts.map((p: any) => (
                 <div key={p.id} className="flex items-center justify-between py-2 border-b last:border-0">
                   <p className="text-sm text-foreground truncate max-w-[200px]">{p.name}</p>
                   <span
                     className={`text-xs font-mono font-medium px-2 py-0.5 rounded-full ${p.stock === 0
-                        ? "bg-red-100 text-red-700"
-                        : "bg-orange-100 text-orange-700"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-orange-100 text-orange-700"
                       }`}
                   >
                     {p.stock === 0 ? "OUT" : `${p.stock} left`}
@@ -297,7 +297,7 @@ export default async function AnalyticsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {recentOrders.map((order) => (
+              {recentOrders.map((order: any) => (
                 <tr key={order.id} className="hover:bg-muted/30 transition-colors">
                   <td className="py-3 font-mono text-xs text-muted-foreground">
                     {order.orderNumber}
@@ -306,12 +306,12 @@ export default async function AnalyticsPage() {
                   <td className="py-3">
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.orderStatus === "DELIVERED"
-                          ? "bg-green-100 text-green-700"
-                          : order.orderStatus === "CANCELLED"
-                            ? "bg-red-100 text-red-700"
-                            : order.orderStatus === "SHIPPED"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-orange-100 text-orange-700"
+                        ? "bg-green-100 text-green-700"
+                        : order.orderStatus === "CANCELLED"
+                          ? "bg-red-100 text-red-700"
+                          : order.orderStatus === "SHIPPED"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-orange-100 text-orange-700"
                         }`}
                     >
                       {order.orderStatus}
