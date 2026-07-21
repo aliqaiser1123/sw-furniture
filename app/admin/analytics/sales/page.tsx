@@ -22,11 +22,11 @@ export default async function SalesAnalyticsPage() {
     db.order.count(),
   ]);
 
-  const totalRevenue = allOrders.reduce((s, o) => s + Number(o.total), 0);
-  const completedOrders = allOrders.filter((o) => o.orderStatus === "DELIVERED");
-  const completedRevenue = completedOrders.reduce((s, o) => s + Number(o.total), 0);
+  const totalRevenue = allOrders.reduce((s: any, o: any) => s + Number(o.total), 0);
+  const completedOrders = allOrders.filter((o: any) => o.orderStatus === "DELIVERED");
+  const completedRevenue = completedOrders.reduce((s: any, o: any) => s + Number(o.total), 0);
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-  const cancelledOrders = allOrders.filter((o) => o.orderStatus === "CANCELLED").length;
+  const cancelledOrders = allOrders.filter((o: any) => o.orderStatus === "CANCELLED").length;
 
   const months = getLast12Months();
   const revenueData = months.map((label: string) => ({
@@ -80,7 +80,7 @@ export default async function SalesAnalyticsPage() {
         <h3 className="font-semibold mb-4">Order Status Breakdown</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {(["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"] as const).map((status) => {
-            const count = allOrders.filter((o) => o.orderStatus === status).length;
+            const count = allOrders.filter((o: any) => o.orderStatus === status).length;
             const pct = totalOrders > 0 ? ((count / totalOrders) * 100).toFixed(1) : "0";
             return (
               <div key={status} className="bg-secondary/30 rounded-lg p-4 text-center">
